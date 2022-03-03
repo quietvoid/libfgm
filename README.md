@@ -1,16 +1,11 @@
-#LIBFGM
-
-Libfgm can be used to extract characteristics of the film grain and add it to a binary file.
-
-Libfgm is available under APACHE 2.0 license
-
-### Requirements
+# Libfgm
+- Libfgm can be used to extract characteristics of the film grain and add it to a binary file.
+- Libfgm is available under APACHE 2.0 license
+## Requirements:
 - OpenCV 4.5 or higher (http://opencv.org/downloads.html);
 - One of your favourite IDE/compiler(with C++11 support).
-
-## Sample commandline
-#### libfgm --input noise.yuv --width W --height H --output filtered.yuv --model model.bin [--pix-fmt <yuv pixel format> --kalman-weight <integer> --wiener-weight <integer> --wiener-filter <0/1/2> --frames <integer> --skip <integer> --frequency-filter <0/1>]
-
+## Sample commandline:
+- libfgm --input noise.yuv --width W --height H --output filtered.yuv --model model.bin [ --pix-fmt <yuv pixel format> --kalman-weight <integer> --wiener-weight <integer> --wiener-filter <0/1/2> --frames <integer> --skip <integer> --frequency-filter <0/1>]
 ### Help:
 - --input <input film grain noisy file>
 - --output <filtered output file>
