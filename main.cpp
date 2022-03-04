@@ -47,7 +47,7 @@ void printInfo()
             "--height H\n"
             "--pix-fmt yuv pixel format (yuv420p)\n"
             "--model modelFilename.bin\n"
-            "--frequency-filter <0/1> 0 = AutoRegressionModel 1 = FrequencyFilteringModel");
+            "--model-id <0/1> 0 = FrequencyFilteringModel; 1 = AutoRegressionModel");
 }
 
 int main(int argc, char **argv)
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     float bilateralSigmas = 50;
     int dst_weight = 1;
     int dst_kalman_weight = 1;
-    int dst_frequency_filtering = 1;
+    int dst_model_id = 0;
     char* filter;
     int total_frames = 0;
     int skip_frames = 0;
@@ -116,8 +116,8 @@ int main(int argc, char **argv)
             dst_weight = atoi(argv[i+1]);
         } else if (!strcmp(argv[i], "--kalman-weight")) {
             dst_kalman_weight = atoi(argv[i+1]);
-        } else if (!strcmp(argv[i], "--frequency-filter")) {
-            dst_frequency_filtering = atoi(argv[i+1]);
+        } else if (!strcmp(argv[i], "--model-id")) {
+            dst_model_id = atoi(argv[i+1]);
         } else if (!strcmp(argv[i], "--pix-fmt")){
             if (!strcmp(argv[i+1],"yuv422p")){
                 ifmt = YUV422P;
@@ -254,19 +254,24 @@ int main(int argc, char **argv)
             /* Return list of 64x64 block index with the 95% non-edges region */
             edge_detect.NonEdge64x64Blocks(canny, index_nonedge_blocks, &total_nonedge_blocks);
             getResidual(dst, src, &difference_image, index_nonedge_blocks, &int_value, bits);
-            if(dst_frequency_filtering)
-            {
+
+            if(dst_model_id) {
+                // model_id = 1, Auto-regression
+                calculateModelValues(dst, index_nonedge_blocks, &int_value, &fg_char);
+            }
+            else {
+                // model_id = 0, Frequency filtering
                 if ((height <= 1080 && height >= 720) || (width <= 1920 && width >= 1280))
                     scale_factor = 5;
                 else if (height < 720 || width < 1280)
                     scale_factor = 6;
                 else
                     scale_factor = 4;
+
                 computeFGParams(&int_value, &fg_char, scale_factor);
             }
-            else
-                calculateModelValues(dst, index_nonedge_blocks, &int_value, &fg_char);
         }
+
         writeFilmGrainFrequencyModel(fg_char, fmodel);
         if (total_frames && ((frame_count + 1) >= total_frames))
             break;

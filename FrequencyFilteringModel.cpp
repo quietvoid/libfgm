@@ -25,6 +25,7 @@ void computeFGParams(struct intensityValues* int_values, struct SEIFilmGrainChar
     /* Adding relevant SEI film grain params */
     float factor = 0.7;
     memset(fgm_char, 0, sizeof(struct SEIFilmGrainCharacteristics));
+    fgm_char->m_filmGrainModelId = 0;
     fgm_char->m_log2ScaleFactor = scale_factor;
     fgm_char->m_compModel[0].bPresentFlag = true;
     fgm_char->m_compModel[1].bPresentFlag = false;

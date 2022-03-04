@@ -22,6 +22,8 @@
 void calculateModelValues(Mat src1, int* index, struct intensityValues* int_values, struct SEIFilmGrainCharacteristics* fgm_char)
 {
     memset(fgm_char, 0, sizeof(struct SEIFilmGrainCharacteristics));
+
+    fgm_char->m_filmGrainModelId = 1;
     fgm_char->m_log2ScaleFactor = 4;
     fgm_char->m_compModel[0].bPresentFlag = true;
     fgm_char->m_compModel[1].bPresentFlag = false;
