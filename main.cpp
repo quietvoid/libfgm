@@ -249,12 +249,21 @@ int main(int argc, char **argv)
         /* Start frequency filtering model at first frame or at scencuts */
         if (!frame_count || scenecut)
         {
+            int scale_factor;
             edge_detect.EdgeDetection(dst, &canny, bits);
             /* Return list of 64x64 block index with the 95% non-edges region */
             edge_detect.NonEdge64x64Blocks(canny, index_nonedge_blocks, &total_nonedge_blocks);
             getResidual(dst, src, &difference_image, index_nonedge_blocks, &int_value, bits);
             if(dst_frequency_filtering)
-                computeFGParams(&int_value, &fg_char);
+            {
+                if ((height <= 1080 && height >= 720) || (width <= 1920 && width >= 1280))
+                    scale_factor = 5;
+                else if (height < 720 || width < 1280)
+                    scale_factor = 6;
+                else
+                    scale_factor = 4;
+                computeFGParams(&int_value, &fg_char, scale_factor);
+            }
             else
                 calculateModelValues(dst, index_nonedge_blocks, &int_value, &fg_char);
         }

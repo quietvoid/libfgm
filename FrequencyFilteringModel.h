@@ -25,5 +25,5 @@
 using namespace std;
 using namespace cv;
 
-void computeFGParams(struct intensityValues* int_values, struct SEIFilmGrainCharacteristics* fgm_char);
+void computeFGParams(struct intensityValues* int_values, struct SEIFilmGrainCharacteristics* fgm_char, int scale_factor);
 #endif

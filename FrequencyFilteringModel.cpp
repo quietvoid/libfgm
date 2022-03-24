@@ -20,15 +20,17 @@
 #include "FrequencyFilteringModel.h"
 #include <cassert>
 
-void computeFGParams(struct intensityValues* int_values, struct SEIFilmGrainCharacteristics* fgm_char)
+void computeFGParams(struct intensityValues* int_values, struct SEIFilmGrainCharacteristics* fgm_char, int scale_factor)
 {
     /* Adding relevant SEI film grain params */
+    float factor = 0.7;
     memset(fgm_char, 0, sizeof(struct SEIFilmGrainCharacteristics));
-    fgm_char->m_log2ScaleFactor = 4;
+    fgm_char->m_log2ScaleFactor = scale_factor;
     fgm_char->m_compModel[0].bPresentFlag = true;
     fgm_char->m_compModel[1].bPresentFlag = false;
     fgm_char->m_compModel[2].bPresentFlag = false;
-
+    if (scale_factor == 6)
+        factor = 1.1;
     /* Set the luma film grain param values */
     fgm_char->m_compModel[0].numModelValues = 1;
     fgm_char->m_compModel[0].m_filmGrainNumIntensityIntervalMinus1 = 0;
@@ -36,6 +38,6 @@ void computeFGParams(struct intensityValues* int_values, struct SEIFilmGrainChar
 
     intensityVal->intensityIntervalLowerBound = CLIP3(0, 255, int_values->min_intensity * 0.1);
     intensityVal->intensityIntervalUpperBound = CLIP3(0, 255, int_values->max_intensity * 1.1);
-    intensityVal->compModelValue[0] = CLIP3(0, 255, int_values->model_intensity * 0.7);
+    intensityVal->compModelValue[0] = CLIP3(0, 255, int_values->model_intensity * factor);
 
 }
